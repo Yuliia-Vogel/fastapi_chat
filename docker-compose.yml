@@ -1,0 +1,40 @@
+services:
+  # для бекенду (FastAPI)
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/src:/app
+    environment:
+      - DATABASE_URL=postgresql://messenger:messenger_pass@db:5432/messenger_db
+    depends_on:
+      - db
+    restart: always
+
+  # для фронтенду (React)
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+    restart: always
+
+  # для бази даних (PostgreSQL)
+  db:
+    image: postgres:14-alpine
+    volumes: # 1-ий магічний рядок, який каже, щоб оці всі дані в контейнері:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=messenger
+      - POSTGRES_PASSWORD=messenger_pass
+      - POSTGRES_DB=messenger_db
+    ports:
+      - "5432:5432"
+    restart: always
+
+volumes: # 2-ий магічний рядок: зберігай отут (всі дані, що є всередині контейнера)
+  postgres_data:
