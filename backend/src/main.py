@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-# from .routers import auth, messages
+from routers import auth, messages
 
 
 app = FastAPI(
@@ -15,8 +15,10 @@ async def root():
     return {"message": "Welcome to the first page"}
 
 
-@app.get("/healthchecker/1")
-async def health1():
+@app.get("/api/v1/healthchecker")
+async def health_check():
     return {"message": "This is Healthchecker 1 message. It's Ok!"}
-# app.include_router(auth.router)
+
+
+app.include_router(auth.router)
 # app.include_router(messages.router)
