@@ -14,6 +14,7 @@ venv/Scripts/Activate.ps1
 pip install poetry
 - enter folder 'backend' -> 
 poetry install --no-root
+- run Docker desktop
 
 1. Add new package:
 - 
@@ -28,7 +29,7 @@ poetry install --no-root
 `docker-compose up --build`
 
 4. If actions nesessary inside Docker-container:
-`docker-compose exec [назва_сервісу] [команда]`:
+`docker-compose exec [service_name] [command]`:
 For example, migration inside container:
 ```
 # Alembic init:
@@ -48,7 +49,7 @@ docker-compose exec backend alembic upgrade head
 1.  **Встановлення:**
     *   `poetry add alembic sqlalchemy psycopg2-binary`
     *   `poetry export -f requirements.txt --output requirements.txt --without-hashes`
-    <!-- *   `docker-compose up --build` (дочекайтеся запуску всіх контейнерів) -->
+    *   `docker-compose up --build` (дочекайтеся запуску всіх контейнерів)
     *** якщо треба буде ще щось робитивсередині контейнера, то його запускаємо в фоновому режимі, і тоді можна буде писати команди в терміналі:
     * docker-compose up -d --build
     перевіряємо, чи працюють контейнери в фоновому режимі:
@@ -81,6 +82,11 @@ docker-compose exec backend alembic upgrade head
         ```bash
         docker-compose exec backend alembic upgrade head
         ```
+........................................
+Перезібрати Docker-образ і запустити:
+docker-compose build --no-cache backend
+docker-compose up
+........................................
 
 ### Шпаргалка: Старий підхід vs Новий Docker-підхід
 
@@ -90,3 +96,7 @@ docker-compose exec backend alembic upgrade head
 | **Запустити додаток** | `uvicorn main:app --reload` | `docker-compose up` |
 | **Запустити міграцію** | `alembic upgrade head` | `docker-compose exec backend alembic upgrade head` |
 | **Зайти в shell** | `python` | `docker-compose exec backend python` (або `bash`) |
+
+
+Видалити волюм і всі дані:
+docker-compose down -v

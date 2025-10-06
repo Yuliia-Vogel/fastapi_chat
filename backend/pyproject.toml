@@ -1,24 +1,24 @@
-[project]
+[tool.poetry]
 name = "backend"
 version = "0.1.0"
 description = "FastAPI + React application for direct 1+1 messanger."
-authors = [
-    {name = "Yuliia Melnychenko", email = "arwen.vogel@gmail.com"}
-]
+authors = ["Yuliia Melnychenko <arwen.vogel@gmail.com>"]
 readme = "README.md"
-requires-python = "^3.9"
-dependencies = [
-    "fastapi (>=0.118.0,<0.119.0)",
-    "uvicorn (>=0.37.0,<0.38.0)",
-    "sqlalchemy (>=2.0.43,<3.0.0)",
-    "alembic (>=1.16.5,<2.0.0)",
-    "psycopg2-binary (>=2.9.10,<3.0.0)",
-    "python-dotenv (>=1.1.1,<2.0.0)",
-    "pydantic[email] (>=2.11.9,<3.0.0)"
-]
-
-[tool.poetry]
 packages = [{include = "backend", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = ">=0.118.0,<0.119.0"
+uvicorn = ">=0.37.0,<0.38.0"
+sqlalchemy = ">=2.0.43,<3.0.0"
+alembic = ">=1.16.5,<2.0.0"
+psycopg2-binary = ">=2.9.10,<3.0.0"
+python-dotenv = ">=1.1.1,<2.0.0"
+pydantic = {extras = ["email"], version = ">=2.11.9,<3.0.0"}
+python-jose = {extras = ["cryptography"], version = ">=3.5.0,<4.0.0"}
+passlib = "1.7.4"
+bcrypt = "3.2.0" 
+python-multipart = ">=0.0.20,<0.0.21"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

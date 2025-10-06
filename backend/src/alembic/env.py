@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from dependencies import Base
+from database import Base
 from models import User, Message, Attachment
 
 # this is the Alembic Config object, which provides
