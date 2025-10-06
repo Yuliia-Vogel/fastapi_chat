@@ -1,34 +1,36 @@
-import os
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, status
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
 
-load_dotenv()
-
-Base = declarative_base()
-
-database_url = os.getenv("DATABASE_URL")
-
-# Перевірка наявності даних для підключення
-if not database_url:
-    raise ValueError("Не знайдено DATABASE_URL у змінних середовища")
-
-# Для psycopg2 іноді треба замінити postgresql:// на postgresql+psycopg2://
-# if database_url.startswith("postgres://"):
-#     database_url = database_url.replace("postgres://", "postgresql+psycopg2://", 1)
-# elif database_url.startswith("postgresql://"):
-#     database_url = database_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-
-engine = create_engine(database_url)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from schemas import TokenData
+from security import SECRET_KEY, ALGORITHM 
+from repository import get_user_by_email
+from database import get_db
 
 
-# Dependency
-def get_db():
-    db = SessionLocal()
+# oauth2_scheme - це об'єкт, який буде витягувати токен із запиту, 
+# а tokenUrl вказує на віднсний урл ендпоінту, який і видає нам токени
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Не вдалося перевірити облікові дані",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
-        yield db
-        print("Database connected")
-    finally:
-        db.close()
+        # декодую токен
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+    
+    # Отримуємо користувача з бази даних
+    user = get_user_by_email(db, email=token_data.email)
+    if user is None:
+        raise credentials_exception
+    return user
