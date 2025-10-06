@@ -83,6 +83,9 @@ docker-compose exec backend alembic upgrade head
         docker-compose exec backend alembic upgrade head
         ```
 ........................................
+Зупинити контейнер і видалити всі контейнери і всі волюми:
+docker-compose down -v
+........................................
 Перезібрати Docker-образ і запустити:
 docker-compose build --no-cache backend
 docker-compose up
@@ -169,3 +172,8 @@ CMD ["npm", "start"]
 2.  `package.json` — це ваш "requirements.txt" для фронтенду. Він єдиний потрібен, щоб відтворити всі залежності.
 3.  `Dockerfile` для фронтенду копіює `package.json` і виконує `npm install` всередині контейнера, створюючи там свою власну папку `node_modules`.
 4.  Docker Compose просто запускає збірку цього `Dockerfile` і запускає отриманий контейнер.
+
+
+
+
+

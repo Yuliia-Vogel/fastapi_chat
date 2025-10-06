@@ -49,3 +49,7 @@ class MessageResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class MessageUpdate(BaseModel):
+    content: str
