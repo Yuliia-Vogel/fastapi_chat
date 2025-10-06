@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import auth, messages
+from routers import auth, users, messages
 
 
 app = FastAPI(
@@ -21,4 +21,5 @@ async def health_check():
 
 
 app.include_router(auth.router)
-# app.include_router(messages.router)
+app.include_router(users.router)
+app.include_router(messages.router)

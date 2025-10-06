@@ -14,9 +14,9 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     user_creation_date = Column(DateTime(timezone=True), server_default=func.now())
 
-    # зв'язки
-    messages = relationship("Message", back_populates="user", cascade="all, delete-orphan")
-    files = relationship("Attachment", back_populates="user", cascade="all, delete-orphan")
+    # Явно вказую, які повідомлення надіслані, а які отримані
+    sent_messages = relationship("Message", foreign_keys="[Message.sender_id]", back_populates="sender")
+    received_messages = relationship("Message", foreign_keys="[Message.receiver_id]", back_populates="receiver")
 
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email})>"
@@ -30,9 +30,10 @@ class Message(Base):
     message_date = Column(DateTime(timezone=True), server_default=func.now())
     
     sender_id = Column(Integer, ForeignKey("users.id"))
-
-    # зв'язки
-    user = relationship("User", back_populates="messages")
+    receiver_id = Column(Integer, ForeignKey("users.id"))
+    # явні зв"язки з back_populates до відповідних полів у User:
+    sender = relationship("User", foreign_keys=[sender_id])
+    receiver = relationship("User", foreign_keys=[receiver_id])
     # Одне повідомлення має багато вкладень - це буде список об'єктів Attachment:
     attachments = relationship("Attachment", back_populates="message", cascade="all, delete-orphan")
 
@@ -44,19 +45,15 @@ class Attachment(Base):
     __tablename__ = "attachments"
 
     id = Column(Integer, primary_key=True)
-    filename = Column(String, nullable=False)
+    original_filename = Column(String, nullable=False)
     file_path = Column(String, unique=True, nullable=False)
-    file_type = Column(String, nullable=False)
-    file_send_date = Column(DateTime(timezone=True), server_default=func.now())
+    file_type = Column(String, nullable=True) # ставимо "тру" на випадок, яещо тип файлу буде невідомий
     
-    user_id = Column(Integer, ForeignKey("users.id"))
-    # pзв"язок вкладення з конкретним повідомленням:
+    # зв"язок вкладення з конкретним повідомленням:
     message_id = Column(Integer, ForeignKey("messages.id"))
 
-    # зв'язки з ін. таблицями:
-    user = relationship("User", back_populates="files")
     # це вкладення належить одному повідомленню:
     message = relationship("Message", back_populates="attachments")
 
     def __repr__(self):
-        return f"<Attachment(id={self.id}, filename='{self.filename}')>"
+        return f"<Attachment(id={self.id}, filename='{self.original_filename}')>"
