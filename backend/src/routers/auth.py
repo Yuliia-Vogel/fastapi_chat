@@ -63,3 +63,15 @@ def read_users_me(current_user: User = Depends(get_current_user)):
     # 2. Якщо токен невалідний або відсутній, поверне помилку 401.
     # 3. Якщо все добре, в `current_user` буде об'єкт користувача з бази даних.
     return current_user
+
+
+@router.post("/logout")
+def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    current_user.refresh_token = None
+    db.commit()
+    return {"message": "Ви успішно вийшли з акаунту."}
+
+
+# Логаут планую зробити тз "клієнтським", тобто токен живе вказані 30 хв (у localStorage) і потім деактивується сам. 
+# Тобто окремого роута для логаута не буде. Але на фронті зроблю кнопку "Вийти", натиснувши яку користувач 
+# виходить з фронтенду (тобто він на фронті видалить токен з localStorage), і таким чином сесія цього токена/користувача завершиться.
