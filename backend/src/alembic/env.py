@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -60,6 +61,11 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise ValueError("DATABASE_URL не знайдено у змінних оточення")
+    # програмно встановлюю УРЛ, який ми отримали з .енв, в об'єкт конфігурації Алембік:
+    config.set_main_option("sqlalchemy.url", db_url)
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
