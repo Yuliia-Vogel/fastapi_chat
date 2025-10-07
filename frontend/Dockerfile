@@ -1,19 +1,20 @@
-    FROM node:20-alpine as builder
+# 1. Базовий образ
+FROM node:20-alpine
 
-    WORKDIR /app
+# 2. Робоча директорі
+WORKDIR /app
 
-    COPY package.json package-lock.json ./
+# 3. Копіюємо файли-декларації
+COPY package.json yarn.lock* ./
 
-    RUN npm install
+# 4. Встановлюємо залежності за допомогою YARN
+RUN yarn install --frozen-lockfile
 
-    COPY . .
+# 5. Копіюємо решту коду
+COPY . .
 
-    RUN npm run build
+# 6. Відкриваємо порт
+EXPOSE 3000
 
-    FROM nginx:1.21-alpine
-
-    COPY --from=builder /app/dist /usr/share/nginx/html
-
-    EXPOSE 80
-
-    CMD ["nginx", "-g", "daemon off;"]
+# 7. Запускаємо сервер розробки за допомогою YARN
+CMD ["yarn", "dev"]

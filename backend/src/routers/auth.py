@@ -55,14 +55,7 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-# тестовий
-@router.get("/users/me", response_model=UserResponse)
-def read_users_me(current_user: User = Depends(get_current_user)):
-    # Завдяки Depends(get_current_user) цей ендпоінт:
-    # 1. Вимагатиме Authorization: Bearer <token> заголовок.
-    # 2. Якщо токен невалідний або відсутній, поверне помилку 401.
-    # 3. Якщо все добре, в `current_user` буде об'єкт користувача з бази даних.
-    return current_user
+
 
 
 @router.post("/logout")
