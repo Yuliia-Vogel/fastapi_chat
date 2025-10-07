@@ -56,8 +56,6 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
 
 
 
-
-
 @router.post("/logout")
 def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     current_user.refresh_token = None

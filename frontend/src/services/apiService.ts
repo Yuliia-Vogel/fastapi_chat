@@ -12,16 +12,24 @@ apiClient.interceptors.request.use(config => {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
+}, error => {
+    return Promise.reject(error);
 });
 
 export const getAllUsers = (): Promise<{ data: User[] }> => {
     return apiClient.get('/users');
 };
 
+// Функція для отримання історії повідомлень з конкретним користувачем
 export const getMessagesWithUser = (userId: number): Promise<{ data: Message[] }> => {
     return apiClient.get(`/messages/${userId}`);
 };
 
-// Тут можна додати функції для редагування, видалення повідомлень, завантаження файлів
-// export const deleteMessage = (messageId: number) => apiClient.delete(`/messages/${messageId}`);
-// export const updateMessage = (messageId: number, content: string) => apiClient.put(`/messages/${messageId}`, { content });
+// Функції для редагування та видалення. Ми їх поки не реалізуємо, але залишимо на майбутнє
+export const deleteMessage = (messageId: number) => {
+    return apiClient.delete(`/messages/${messageId}`);
+};
+
+export const updateMessage = (messageId: number, content: string) => {
+    return apiClient.put(`/messages/${messageId}`, { content });
+};

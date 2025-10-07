@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { User } from '../types';
@@ -10,22 +11,22 @@ export function ChatPage() {
 
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
-            {/* Ліва колонка: список користувачів */}
-            <div className="w-1/3 bg-gray-200 border-r border-gray-300">
-                <div className="p-4 border-b border-gray-300 flex justify-between items-center">
-                    <h2 className="text-xl font-bold">Чати ({user?.username})</h2>
+            <aside className="w-1/3 bg-gray-200 border-r border-gray-300 flex flex-col">
+                <header className="p-4 border-b border-gray-300 flex justify-between items-center flex-shrink-0">
+                    <h2 className="text-xl font-bold text-gray-800">Чати ({user?.username})</h2>
                     <button
                         onClick={logout}
                         className="px-3 py-1 text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600"
                     >
                         Вийти
                     </button>
+                </header>
+                <div className="flex-grow">
+                   <UserList onSelectUser={setSelectedUser} selectedUserId={selectedUser?.id || null} />
                 </div>
-                <UserList onSelectUser={setSelectedUser} />
-            </div>
+            </aside>
 
-            {/* Права колонка: вікно чату */}
-            <div className="w-2/3 flex flex-col">
+            <main className="w-2/3 flex flex-col">
                 {selectedUser ? (
                     <ChatWindow selectedUser={selectedUser} />
                 ) : (
@@ -33,7 +34,7 @@ export function ChatPage() {
                         <p className="text-gray-500 text-lg">Оберіть чат, щоб почати спілкування</p>
                     </div>
                 )}
-            </div>
+            </main>
         </div>
     );
 }
