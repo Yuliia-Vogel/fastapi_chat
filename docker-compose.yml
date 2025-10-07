@@ -19,7 +19,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/src:/app/src
+      - ./frontend:/app
+      # кажемо Docker не чіпати папку node_modules всередині контейнера.
+      # Це запобігає конфліктам між node_modules на вашій Windows і в контейнері (Linux).
+      - /app/node_modules
     depends_on:
       - backend
     restart: always
