@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from routers import auth, users, messages, websockets
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi.staticfiles import StaticFiles
+
 
 app = FastAPI(
     title="1+1",
@@ -13,17 +15,18 @@ app = FastAPI(
 
 origins = [
     "http://localhost",
-    "http://localhost:3000", # React
+    "http://localhost:3000", # реакт
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, # Дозволити запити з цих джерел
+    allow_origins=origins, 
     allow_credentials=True,
     allow_methods=["*"], # Дозволити всі методи (GET, POST, etc.)
     allow_headers=["*"], # Дозволити всі заголовки
 )
 
+app.mount("/media", StaticFiles(directory="media"), name="media") # це для того, щоб бекенд роздавав файли з папки "медіа"
 
 @app.get("/")
 async def root():

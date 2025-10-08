@@ -5,6 +5,14 @@ export interface User {
     username: string;
 }
 
+// опис одного вкладення
+export interface Attachment {
+    id: number;
+    original_filename: string;
+    file_path: string;
+    file_type: string;
+}
+
 // дані для форми реєстрації:
 export interface RegisterData {
     email: string;
@@ -25,4 +33,5 @@ export interface Message {
     receiver_id: number;
     content: string;
     message_date: string; // Дати з беку приходять як рядки
+    attachments: Attachment[]; // масив вкладень
 }
