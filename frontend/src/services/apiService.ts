@@ -33,3 +33,18 @@ export const deleteMessage = (messageId: number) => {
 export const updateMessage = (messageId: number, content: string) => {
     return apiClient.put(`/messages/${messageId}`, { content });
 };
+
+// для відправки повідомлень з файлами
+export const sendMessageWithFiles = (content: string, receiverId: number, files: FileList): Promise<{ data: Message }> => {
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('receiver_id', String(receiverId));
+
+    // Додаємо всі обрані файли
+    for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+    }
+
+    // Відправляємо запит. Браузер сам встановить правильний заголовок 'Content-Type': 'multipart/form-data'
+    return apiClient.post('/messages/', formData);
+};
