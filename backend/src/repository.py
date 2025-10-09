@@ -91,4 +91,4 @@ def delete_message(db: Session, message_id: int):
     if db_message:
         db.delete(db_message)
         db.commit()
-    return db_message # вертає об'єкт для перевірки в роутері
+    return db_message 
