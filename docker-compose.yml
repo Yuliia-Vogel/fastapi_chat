@@ -21,12 +21,12 @@ services:
     volumes:
       - ./frontend:/app
       # кажемо Docker не чіпати папку node_modules всередині контейнера.
-      # Це запобігає конфліктам між node_modules на вашій Windows і в контейнері (Linux).
+      # Це запобігає конфліктам між node_modules на моїй Windows і в контейнері (Linux).
       - /app/node_modules
     depends_on:
       - backend
     restart: always
-
+        
   # для бази даних (PostgreSQL)
   db:
     image: postgres:14-alpine

@@ -13,14 +13,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Секретний ключ для підпису JWT токенів.
 DATABASE_URL = os.getenv("DATABASE_URL")
-print(f"DB url = {DATABASE_URL}")
 SECRET_KEY = os.getenv("MY_SECRET_KEY")
-print(f"Secret key = {SECRET_KEY}")
 ALGORITHM = os.getenv("ALGORITHM")
-print(f"Algorhitm = {ALGORITHM}")
-# DATABASE_URL = "postgresql://messenger:messenger_pass@db:5432/messenger_db"
-# SECRET_KEY = "my-super-secret-key"
-# ALGORITHM = "HS256"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
