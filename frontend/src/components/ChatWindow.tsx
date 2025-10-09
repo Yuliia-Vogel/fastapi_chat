@@ -10,8 +10,12 @@ function EditMessageForm({ message, onSave, onCancel }: { message: Message, onSa
     return ( <form onSubmit={handleSubmit} className="flex"> <input type="text" value={content} onChange={(e) => setContent(e.target.value)} className="flex-1 px-2 py-1 text-sm border border-gray-400 rounded-l-md bg-white text-black" autoFocus /> <button type="submit" className="px-3 py-1 text-sm bg-green-600 text-white rounded-r-md">Зберегти</button> <button type="button" onClick={onCancel} className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md ml-2">Скасувати</button> </form> );
 }
 
+interface ChatWindowProps {
+        selectedUser: User;
+        onBack: () => void; 
+    }
 
-export function ChatWindow({ selectedUser }: ChatWindowProps) {
+export function ChatWindow({ selectedUser, onBack }: ChatWindowProps) {
     const { user: currentUser, sendMessage, lastMessage } = useAuth();
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState('');
@@ -96,7 +100,17 @@ export function ChatWindow({ selectedUser }: ChatWindowProps) {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="p-4 bg-white border-b border-gray-300"><h2 className="text-xl font-bold">{selectedUser.username}</h2></div>
+            <div className="p-4 bg-white border-b border-gray-200 flex items-center gap-4">
+                {/* Кнопка "Назад", видима тільки на мобільних (до md) */}
+                <button 
+                    onClick={onBack} 
+                    className="text-2xl font-bold text-gray-600 hover:text-gray-800 sm:hidden"
+                    aria-label="Назад до списку чатів"
+                >
+                    &larr; {/* Це HTML-код для стрілки вліво ← */}
+                </button>
+                <h2 className="text-xl font-bold text-gray-800">{selectedUser.username}</h2>
+            </div>
             
             <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                 {messages.map((msg) => {
